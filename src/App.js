@@ -1,24 +1,30 @@
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
 import shortid from 'shortid'
 import { Container } from './components/container/Container'
 import { ContactList } from './components/ContactList/ContactList'
 import { ContactForm } from './components/ContactForm/ContactForm'
 import { ContactFilter } from './components/ContactFilter/ContactFilter'
 
-class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  }
+function App() {
+  const [contacts, setContacts] = useState([])
+  const [filter, setFilter] = useState('')
+
+  /* -------------------------- Запись в localStorage ------------------------- */
+
+  useEffect(() => {
+    const contacts = JSON.parse(localStorage.getItem('contacts'))
+
+    if (contacts) {
+      setContacts(contacts)
+    }
+  }, [])
+
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts))
+  }, [contacts])
 
   /* ---------------------- Добавление контакта в список ---------------------- */
-  addContact = (name, number) => {
-    const { contacts } = this.state
+  const addContact = (name, number) => {
     const reLockInput = contacts.find((contact) => contact.name === name)
 
     /* ------------------------ условие запрета на повторный ввод ----------------------- */
@@ -31,51 +37,42 @@ class App extends Component {
         number,
         id: shortid.generate(),
       }
-      this.setState(({ contacts }) => ({
-        contacts: [contact, ...contacts],
-      }))
+      setContacts((contacts) => [contact, ...contacts])
     }
   }
 
   /* ----------------------- Удаление контакта из списка ---------------------- */
-  contactDelete = (contactId) => {
-    this.setState(({ contacts }) => ({
-      contacts: contacts.filter((contact) => contact.id !== contactId),
-    }))
+  const contactDelete = (contactId) => {
+    setContacts((contacts) =>
+      contacts.filter((contact) => contact.id !== contactId),
+    )
   }
 
   /* ---------------------------- Фильтр контактов ---------------------------- */
-  contactsFilter = (e) => {
+  const contactsFilter = (e) => {
     const { value } = e.target
-    this.setState({ filter: value })
+    setFilter(value)
   }
 
-  getVisibleContacts = () => {
-    const { contacts, filter } = this.state
+  const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase()
     return contacts.filter((contact) =>
       contact.name.toLowerCase().includes(normalizedFilter),
     )
   }
 
-  render() {
-    const { filter } = this.state
-    const visibleContacts = this.getVisibleContacts()
+  const visibleContacts = getVisibleContacts()
 
-    return (
-      <Container>
-        <h1>Phoneboock</h1>
-        <ContactForm onAddContact={this.addContact} />
+  return (
+    <Container>
+      <h1>Phoneboock</h1>
+      <ContactForm onAddContact={addContact} />
 
-        <h2>Contacts</h2>
-        <ContactFilter value={filter} onChange={this.contactsFilter} />
-        <ContactList
-          contacts={visibleContacts}
-          onContactDelete={this.contactDelete}
-        />
-      </Container>
-    )
-  }
+      <h2>Contacts</h2>
+      <ContactFilter value={filter} onChange={contactsFilter} />
+      <ContactList contacts={visibleContacts} onContactDelete={contactDelete} />
+    </Container>
+  )
 }
 
 export default App
