@@ -1,0 +1,15 @@
+.filterInput {
+  display: flex;
+  justify-content: center;
+  width: 300px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.filterInputBox {
+  display: flex;
+  justify-content: center;
+}

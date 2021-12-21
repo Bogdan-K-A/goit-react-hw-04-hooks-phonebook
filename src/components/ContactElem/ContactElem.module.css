@@ -1,0 +1,35 @@
+.contactItem {
+  display: flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid gray;
+  margin-bottom: 10px;
+}
+
+.contactItem p {
+  font-family: 'Roboto', sans-serif;
+
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+
+  margin-bottom: 5px;
+}
+
+.btnItem {
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: none;
+
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+
+  margin-bottom: 5px;
+}
+
+.btnItem:hover {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
